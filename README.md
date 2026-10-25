@@ -4,7 +4,7 @@ A read-only side chat for Paseo. Ask questions about your current session withou
 
 ## Requirements
 
-- Paseo 0.12 or 0.13 with plugins turned on (Settings, then Plugins).
+- Paseo 0.12 or later with plugins turned on (Settings, then Plugins).
 - Claude Code installed and signed in on the daemon host.
 - Optional: Codex CLI installed and signed in on the daemon host, to answer Codex agents with Codex.
 
