@@ -2,6 +2,12 @@
 
 All notable changes to Ask Aside are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## 1.0.1 - 2026-10-26
+
+### Fixed
+
+- Ask Aside loads on Paseo 0.13. Version 1.0.0 accepted only Paseo 0.12, so on a daemon updated to 0.13 the plugin failed to start and `/btw` stopped working. It now supports Paseo 0.12 and 0.13 and is built against the 0.13 plugin SDK.
+
 ## 1.0.0 - 2026-10-26
 
 First release, for Paseo 0.12.

@@ -1,6 +1,6 @@
 {
   "name": "paseo-ask-aside",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A read-only side chat for Paseo. Ask questions about your current session without interrupting the main agent.",
   "keywords": [
     "paseo",
