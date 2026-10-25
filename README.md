@@ -18,6 +18,12 @@ From a local checkout:
 paseo plugin add /path/to/paseo-ask-aside
 ```
 
+From npm:
+
+```sh
+paseo plugin add npm:paseo-ask-aside
+```
+
 From GitHub:
 
 ```sh
