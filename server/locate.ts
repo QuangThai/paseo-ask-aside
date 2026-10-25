@@ -1,5 +1,8 @@
 /// <reference types="node" />
-import type { PaseoApi } from "@getpaseo/client";
+import type { PluginHandlerContext } from "@getpaseo/plugin/server";
+
+// Taken from the plugin SDK, which Paseo provides; @getpaseo/client is not installed with the plugin.
+type PaseoApi = PluginHandlerContext["paseo"];
 
 const MAX_CANDIDATES = 12;
 const TIMELINE_ROWS = 400;

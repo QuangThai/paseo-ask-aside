@@ -1,10 +1,13 @@
 /// <reference types="node" />
-import type { PaseoApi } from "@getpaseo/client";
+import type { PluginHandlerContext } from "@getpaseo/plugin/server";
 import { randomUUID } from "node:crypto";
 import { isActive, type Backend, type Exchange, type Thread } from "../shared/contracts";
 import { runClaude } from "./claude";
 import { runCodex } from "./codex";
 import { buildTranscript, clip, HISTORY_GAP, type TimelineEntryLike } from "./transcript";
+
+// Taken from the plugin SDK, which Paseo provides; @getpaseo/client is not installed with the plugin.
+type PaseoApi = PluginHandlerContext["paseo"];
 
 export interface AsideSettings {
   answerWith: "agent" | "claude";
