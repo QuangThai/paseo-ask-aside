@@ -2,6 +2,12 @@
 
 All notable changes to Ask Aside are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## 1.0.2 - 2026-10-26
+
+### Changed
+
+- Ask Aside no longer sets an upper Paseo version limit, so it keeps loading when Paseo updates instead of needing a new release for each Paseo version. It requires Paseo 0.12 or later.
+
 ## 1.0.1 - 2026-10-26
 
 ### Fixed
