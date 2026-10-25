@@ -34,7 +34,7 @@
     "test": "node --experimental-strip-types --no-warnings --import ./test/setup.mjs --test test/*.test.ts"
   },
   "devDependencies": {
-    "@getpaseo/plugin": "0.12.0",
+    "@getpaseo/plugin": "0.13.0",
     "@tanstack/react-query": "^5.90.11",
     "@types/node": "^26.6.5",
     "@types/react": "~19.2.0",

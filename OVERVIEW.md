@@ -22,7 +22,7 @@ The transcript and question go to Claude Code (`claude -p`) on the daemon host, 
 
 ## Setup
 
-Requires Paseo 0.12 and Claude Code installed and signed in on the daemon host. To answer Codex agents with Codex, Codex must also be installed and signed in there. Tested on Windows 11 with Paseo 0.12.0, Claude Code and Codex CLI 0.163. macOS and Linux run the same code but have not been tested. Paseo 0.13 and later are not supported until tested.
+Requires Paseo 0.12 or 0.13 and Claude Code installed and signed in on the daemon host. To answer Codex agents with Codex, Codex must also be installed and signed in there. Tested on Windows 11 with Paseo 0.12.0 and 0.13.0, Claude Code and Codex CLI 0.163. macOS and Linux run the same code but have not been tested. Paseo 0.14 and later are not supported until tested.
 
 ## Settings
 
