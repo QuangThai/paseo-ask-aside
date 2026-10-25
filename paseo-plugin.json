@@ -1,0 +1,9 @@
+{
+  "id": "ask-aside",
+  "name": "Ask Aside",
+  "description": "A read-only side chat for Paseo. Ask questions about your current session without interrupting the main agent.",
+  "media": [],
+  "requirements": {
+    "paseo": ">=0.12.0 <0.13.0"
+  }
+}
