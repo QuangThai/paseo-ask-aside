@@ -2,6 +2,12 @@
 
 All notable changes to Ask Aside are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## 1.0.3 - 2026-10-26
+
+### Fixed
+
+- Installing from npm or GitHub works. Earlier versions imported a type from `@getpaseo/client`, which Paseo does not provide to plugins, so the build failed unless the plugin's development dependencies happened to be installed. Versions 1.0.0 to 1.0.2 are deprecated on npm for this reason.
+
 ## 1.0.2 - 2026-10-26
 
 ### Changed
