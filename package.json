@@ -10,6 +10,7 @@
     "claude-code",
     "codex"
   ],
+  "license": "MIT",
   "homepage": "https://github.com/QuangThai/paseo-ask-aside#readme",
   "bugs": {
     "url": "https://github.com/QuangThai/paseo-ask-aside/issues"

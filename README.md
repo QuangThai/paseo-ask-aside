@@ -52,3 +52,7 @@ paseo plugin logs ask-aside
 ```
 
 Tests use Node's built-in test runner with type stripping, so they need Node 22.6 or later.
+
+## License
+
+[MIT](LICENSE)
