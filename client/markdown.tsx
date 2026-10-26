@@ -1,7 +1,8 @@
 import type { PluginTheme } from "@getpaseo/plugin";
 import { openExternalUrl } from "@getpaseo/plugin/client";
-import { Fragment, useMemo, type ReactNode } from "react";
-import { Platform, Text, View } from "react-native";
+import { copyText, Icon, useToast } from "@getpaseo/plugin/client/react-native";
+import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Platform, Pressable, Text, View } from "react-native";
 
 // The Paseo 0.12 plugin UI kit has no Markdown component, so answers use this small
 // renderer: fenced code, headings, lists, tables, quotes, rules, and inline code, bold,
@@ -31,16 +32,7 @@ export function MarkdownText({ children, theme, compact }: { children: string; t
       {blocks.map((block, index) => {
         switch (block.kind) {
           case "code":
-            return (
-              <View
-                key={index}
-                style={{ backgroundColor: colors.surface1, borderColor: colors.border, borderWidth: 1, borderRadius: 8, padding: 12 }}
-              >
-                <Text selectable style={{ color: colors.foreground, fontFamily: MONO, fontSize: 12, lineHeight: 18 }}>
-                  {block.text}
-                </Text>
-              </View>
-            );
+            return <CodeBlock key={index} text={block.text} colors={colors} />;
           case "table":
             return <Table key={index} header={block.header} rows={block.rows} colors={colors} />;
           case "heading":
@@ -80,6 +72,50 @@ export function MarkdownText({ children, theme, compact }: { children: string; t
             );
         }
       })}
+    </View>
+  );
+}
+
+const COPIED_MS = 1_500;
+
+/** A fenced block with a copy button in its corner, like code blocks in Paseo's chat. */
+function CodeBlock({ text, colors }: { text: string; colors: Colors }) {
+  const toast = useToast();
+  const [copied, setCopied] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
+  const label = copied ? "Copied" : "Copy code";
+  const copy = () => {
+    copyText(text).then(
+      () => {
+        setCopied(true);
+        clearTimeout(timer.current);
+        timer.current = setTimeout(() => setCopied(false), COPIED_MS);
+      },
+      () => toast.error("Could not copy. Select the text and copy it instead."),
+    );
+  };
+
+  return (
+    <View style={{ backgroundColor: colors.surface1, borderColor: colors.border, borderWidth: 1, borderRadius: 8 }}>
+      {/* The right padding keeps the first lines clear of the copy button in the corner. */}
+      <Text
+        selectable
+        style={{ color: colors.foreground, fontFamily: MONO, fontSize: 12, lineHeight: 18, padding: 12, paddingRight: 36 }}
+      >
+        {text}
+      </Text>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        // Web shows the label as a tooltip.
+        {...(Platform.OS === "web" ? ({ title: label } as object) : {})}
+        hitSlop={8}
+        onPress={copy}
+        style={({ pressed }) => ({ position: "absolute", top: 6, right: 6, padding: 4, borderRadius: 6, opacity: pressed ? 0.5 : 1 })}
+      >
+        <Icon name={copied ? "Check" : "Copy"} size={14} color={copied ? colors.statusSuccess : colors.foregroundMuted} />
+      </Pressable>
     </View>
   );
 }
