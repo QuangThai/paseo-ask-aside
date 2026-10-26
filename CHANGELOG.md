@@ -2,6 +2,16 @@
 
 All notable changes to Ask Aside are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## 1.0.4 - 2026-10-26
+
+### Fixed
+
+- On phones, the question box stays visible: it sits above the keyboard while typing and above the home indicator or navigation bar otherwise. Before, the keyboard hid it on iPhone and the home indicator covered its lower edge.
+
+### Added
+
+- MIT license.
+
 ## 1.0.3 - 2026-10-26
 
 ### Fixed
