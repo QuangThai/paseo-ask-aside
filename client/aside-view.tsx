@@ -30,6 +30,7 @@ import {
   type Exchange,
   type Thread,
 } from "../shared/contracts";
+import { useBottomClearance } from "./keyboard";
 import { MarkdownText } from "./markdown";
 import { quoteBlock, rememberAgent, setQuoteButtonColors, subscribeQuotes } from "./quote-store";
 import { ASIDE_ROOT_ID } from "./web";
@@ -126,6 +127,13 @@ export function AsideView({ theme, layout, host, agentId }: AsideViewProps) {
   // reread an earlier answer is not interrupted.
   const scrollRef = useRef<NativeScrollView>(null);
   const atBottom = useRef(true);
+  // On phones the keyboard or the home indicator would cover the question box: pad the panel
+  // clear of them, and keep the newest answer in view if the reader was already at the end.
+  const rootRef = useRef<View>(null);
+  const { padding: bottomClearance, remeasure: remeasureBottom } = useBottomClearance(rootRef);
+  useEffect(() => {
+    if (bottomClearance > 0 && atBottom.current) scrollRef.current?.scrollToEnd({ animated: true });
+  }, [bottomClearance]);
   const latestAnswerLength = latest?.answer.length ?? 0;
   useEffect(() => {
     if (atBottom.current) scrollRef.current?.scrollToEnd({ animated: false });
@@ -163,7 +171,12 @@ export function AsideView({ theme, layout, host, agentId }: AsideViewProps) {
   const muted = theme.colors.foregroundMuted;
 
   return (
-    <View style={styles.root} nativeID={ASIDE_ROOT_ID}>
+    <View
+      ref={rootRef}
+      style={[styles.root, { paddingBottom: bottomClearance }]}
+      nativeID={ASIDE_ROOT_ID}
+      onLayout={remeasureBottom}
+    >
       <View style={styles.header}>
         <Icon name="MessageCircle" size={16} color={muted} />
         <View style={styles.headerText}>
