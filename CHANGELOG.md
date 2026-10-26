@@ -2,6 +2,13 @@
 
 All notable changes to Ask Aside are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## 1.0.5 - 2026-10-26
+
+### Added
+
+- A button to return to the newest answer appears after scrolling up in a side chat, like in Paseo's chat.
+- Code blocks in answers have a copy button in their corner that copies just the block.
+
 ## 1.0.4 - 2026-10-26
 
 ### Fixed
