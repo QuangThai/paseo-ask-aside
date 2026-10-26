@@ -138,10 +138,18 @@ export function AsideView({ theme, layout, host, agentId }: AsideViewProps) {
   useEffect(() => {
     if (atBottom.current) scrollRef.current?.scrollToEnd({ animated: false });
   }, [latestAnswerLength]);
+  // Shown after scrolling up, like Paseo's chat.
+  const [showJump, setShowJump] = useState(false);
   useEffect(() => {
     atBottom.current = true;
+    setShowJump(false);
     scrollRef.current?.scrollToEnd({ animated: false });
   }, [exchanges.length]);
+  const jumpToLatest = () => {
+    atBottom.current = true;
+    setShowJump(false);
+    scrollRef.current?.scrollToEnd({ animated: true });
+  };
   const [focused, setFocused] = useState(false);
 
   const now = useNow(30_000);
@@ -199,34 +207,52 @@ export function AsideView({ theme, layout, host, agentId }: AsideViewProps) {
         ) : null}
       </View>
 
-      <ScrollView
-        ref={scrollRef}
-        style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
-        scrollEventThrottle={100}
-        onScroll={(event) => {
-          const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
-          atBottom.current = contentOffset.y + layoutMeasurement.height >= contentSize.height - 48;
-        }}
-      >
-        {thread.isLoading ? <ActivityIndicator color={muted} /> : null}
-        {!thread.isLoading && exchanges.length === 0 ? (
-          <View style={styles.emptyBox}>
-            <Text style={styles.emptyTitle}>Ask without interrupting</Text>
-            <Text style={styles.empty}>
-              Why did the agent pick this approach? What was that file called? What does this error mean? Answers come
-              from the conversation so far. The agent keeps working and never sees the question.
-            </Text>
-            {Platform.OS === "web" ? (
-              <Text style={styles.empty}>Tip: select text anywhere in the chat and press Ask aside to quote it here.</Text>
-            ) : null}
+      <View style={styles.scrollArea}>
+        <ScrollView
+          ref={scrollRef}
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          scrollEventThrottle={100}
+          onScroll={(event) => {
+            const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+            atBottom.current = contentOffset.y + layoutMeasurement.height >= contentSize.height - 48;
+            setShowJump(!atBottom.current);
+          }}
+        >
+          {thread.isLoading ? <ActivityIndicator color={muted} /> : null}
+          {!thread.isLoading && exchanges.length === 0 ? (
+            <View style={styles.emptyBox}>
+              <Text style={styles.emptyTitle}>Ask without interrupting</Text>
+              <Text style={styles.empty}>
+                Why did the agent pick this approach? What was that file called? What does this error mean? Answers come
+                from the conversation so far. The agent keeps working and never sees the question.
+              </Text>
+              {Platform.OS === "web" ? (
+                <Text style={styles.empty}>Tip: select text anywhere in the chat and press Ask aside to quote it here.</Text>
+              ) : null}
+            </View>
+          ) : null}
+          {exchanges.map((exchange) => (
+            <ExchangeView key={exchange.id} exchange={exchange} styles={styles} theme={theme} now={now} onCopy={copy} />
+          ))}
+        </ScrollView>
+        {showJump ? (
+          // Like Paseo's chat: after scrolling up, one tap returns to the newest answer.
+          <View pointerEvents="box-none" style={styles.jumpLayer}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Scroll to latest"
+              {...(Platform.OS === "web" ? ({ title: "Scroll to latest" } as object) : {})}
+              hitSlop={8}
+              onPress={jumpToLatest}
+              style={({ pressed }) => [styles.jumpButton, pressed && styles.pressed]}
+            >
+              <Icon name="ChevronDown" size={layout.compact ? 20 : 18} color={theme.colors.foreground} />
+            </Pressable>
           </View>
         ) : null}
-        {exchanges.map((exchange) => (
-          <ExchangeView key={exchange.id} exchange={exchange} styles={styles} theme={theme} now={now} onCopy={copy} />
-        ))}
-      </ScrollView>
+      </View>
 
       <View style={styles.composerArea}>
         {composerError ? <Text style={styles.composerError}>{composerError}</Text> : null}
@@ -556,7 +582,30 @@ function createStyles(colors: Colors, compact: boolean) {
     subtitle: { color: colors.foregroundMuted, fontSize: 11 },
     iconButton: { padding: 4, borderRadius: 6 },
     pressed: { opacity: 0.5 },
+    scrollArea: { flex: 1 },
     scroll: { flex: 1 },
+    jumpLayer: {
+      position: "absolute" as const,
+      left: 0,
+      right: 0,
+      bottom: 12,
+      alignItems: "center" as const,
+    },
+    jumpButton: {
+      width: compact ? 40 : 34,
+      height: compact ? 40 : 34,
+      borderRadius: compact ? 20 : 17,
+      alignItems: "center" as const,
+      justifyContent: "center" as const,
+      backgroundColor: colors.surface2,
+      borderWidth: 1,
+      borderColor: colors.border,
+      shadowColor: "#000",
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 2 },
+      elevation: 4,
+    },
     scrollContent: { padding: pad, gap: 24 },
     emptyBox: { gap: 8, paddingTop: 8 },
     emptyTitle: { color: colors.foreground, fontSize: 13, fontWeight: "600" as const },
